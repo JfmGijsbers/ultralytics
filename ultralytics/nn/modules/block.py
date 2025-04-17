@@ -220,7 +220,8 @@ class SPPF(nn.Module):
         """Apply sequential pooling operations to input and return concatenated feature maps."""
         y = [self.cv1(x)]
         y.extend(self.m(y[-1]) for _ in range(3))
-        return self.cv2(torch.cat(y, 1))
+        x = self.cv2(torch.cat(y, 1))
+        return x
 
 
 class C1(nn.Module):

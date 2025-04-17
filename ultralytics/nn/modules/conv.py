@@ -613,7 +613,11 @@ class SpatialAttention(nn.Module):
         Returns:
             (torch.Tensor): Spatial-attended output tensor.
         """
-        return x * self.act(self.cv1(torch.cat([torch.mean(x, 1, keepdim=True), torch.max(x, 1, keepdim=True)[0]], 1)))
+        avg_out = torch.mean(x, dim=1, keepdim=True)
+        max_out, _ = torch.max(x, dim=1, keepdim=True)
+        x_cat = torch.cat([avg_out, max_out], dim=1)
+        attention = self.act(self.cv1(x_cat))
+        return x * attention
 
 
 class CBAM(nn.Module):
@@ -649,7 +653,9 @@ class CBAM(nn.Module):
         Returns:
             (torch.Tensor): Attended output tensor.
         """
-        return self.spatial_attention(self.channel_attention(x))
+        x = self.channel_attention(x)
+        x = self.spatial_attention(x)
+        return x
 
 
 class Concat(nn.Module):
