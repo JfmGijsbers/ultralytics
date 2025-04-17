@@ -52,7 +52,6 @@ __all__ = (
     "TorchVision",
 )
 
-
 class DFL(nn.Module):
     """
     Integral module of Distribution Focal Loss (DFL).
